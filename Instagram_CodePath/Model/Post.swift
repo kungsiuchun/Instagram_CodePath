@@ -54,8 +54,7 @@ class Post: PFObject, PFSubclassing {
         UIGraphicsEndImageContext()
         return newImage!
     }
-    
-    
+
     class func postUserImage(image: UIImage?, withCaption caption: String?, withCompletion completion: PFBooleanResultBlock?) {
         // resize the image
         let newSize = CGSize(width: 200, height: 300)

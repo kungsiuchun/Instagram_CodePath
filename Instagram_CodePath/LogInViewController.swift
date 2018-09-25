@@ -33,11 +33,22 @@ class LogInViewController: UIViewController {
         PFUser.logInWithUsername(inBackground: username, password: password) { (user: PFUser?, error: Error?) in
             if let error = error {
                 print("User log in failed: \(error.localizedDescription)")
+                let alertController = UIAlertController(title: "Try again", message: error.localizedDescription, preferredStyle: .alert)
+                
+                // add ok button
+                let okAction = UIAlertAction(title: "OK", style: .cancel, handler: {
+                    (action) in
+                })
+                
+                alertController.addAction(okAction)
+                
+                // Show the errorString somewhere and let the user try again.
+                self.present(alertController, animated: true)
             } else {
                 print("User logged in successfully")
+                 self.performSegue(withIdentifier: "loginSegue", sender: nil)
                 // display view controller that needs to shown after successful login
             }
-            self.performSegue(withIdentifier: "loginSegue", sender: nil)
         }
         }
     }
@@ -51,9 +62,20 @@ class LogInViewController: UIViewController {
             newUser.signUpInBackground { (success: Bool, error: Error?) in
                 if let error = error {
                     print(error.localizedDescription)
+                    let alertController = UIAlertController(title: "Try again", message: error.localizedDescription, preferredStyle: .alert)
+                    
+                    // add ok button
+                    let okAction = UIAlertAction(title: "OK", style: .cancel, handler: {
+                        (action) in
+                    })
+                    alertController.addAction(okAction)
+                    
+                    // Show the errorString somewhere and let the user try again.
+                    self.present(alertController, animated: true)
+                    
                 } else {
                     print("User Registered successfully")
-                    //                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                            self.performSegue(withIdentifier: "loginSegue", sender: nil)
                     // manually segue to logged in view
                 }
             }

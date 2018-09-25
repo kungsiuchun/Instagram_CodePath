@@ -7,46 +7,72 @@
 //
 
 import UIKit
+import Photos
+
 
 class ChoosePhotoFromAlbumViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var selectedImage : UIImage?
-
+    
+    let vc = UIImagePickerController()
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        checkPermission()
+        vc.delegate = self
+        vc.allowsEditing = true
+        vc.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        present(vc, animated: true, completion: nil)
         // Do any additional setup after loading the view.
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    func checkPermission() {
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        switch photoAuthorizationStatus {
+        case .authorized:
+            print("Access is granted by user")
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization({
+                (newStatus) in
+                print("status is \(newStatus)")
+                if newStatus ==  PHAuthorizationStatus.authorized {
+                    /* do stuff here */
+                    print("success")
+                }
+            })
+            print("It is not determined until now")
+        case .restricted:
+            // same same
+            print("User do not have access to photo album.")
+        case .denied:
+            // same same
+            print("User has denied the permission.")
+        }
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
-        let vc = UIImagePickerController()
-        vc.delegate = self
-        vc.allowsEditing = true
-        vc.sourceType = .photoLibrary
-        present(vc, animated: true, completion: nil)
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
     }
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    
+ @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         // Get the image captured by the UIImagePickerController
         //        let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
         selectedImage = editedImage
         // Do something with the images (based on your use case)
         // Dismiss UIImagePickerController to go back to your original view controller
-        dismiss(animated: true, completion: { () -> Void in
-            self.dismiss(animated: false, completion: nil)
+//        dismiss(animated: true, completion: { () -> Void in
+            self.dismiss(animated: true, completion: nil)
             self.performSegue(withIdentifier: "toCaptionSegue", sender: self)
-        })
+//        })
     }
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
         dismiss(animated: true, completion: { () -> Void in
             self.dismiss(animated: false, completion: nil)

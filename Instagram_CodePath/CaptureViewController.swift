@@ -9,17 +9,18 @@
 import UIKit
 import Parse
 
-class CaptureViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate{
+class CaptureViewController: UIViewController{
 
     @IBOutlet weak var message: UITextField!
     @IBOutlet weak var imageToPost: UIImageView!
     var postImage: UIImage?
+    let imagePickerController = UIImagePickerController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         imageToPost.image = postImage
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Post", style: .plain, target: self, action: #selector(upload))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Post", style: .plain, target: self, action: #selector(upload))
         // Do any additional setup after loading the view.
     }
 
@@ -28,7 +29,7 @@ class CaptureViewController: UIViewController, UINavigationControllerDelegate, U
         // Dispose of any resources that can be recreated.
     }
     
-    @objc func upload() -> Void {
+    @IBAction func postImage(_ sender: Any) {
         Post.postUserImage(image: postImage,
                            withCaption: message.text,
                            withCompletion: { (success: Bool, error: Error?) -> Void in
@@ -37,7 +38,9 @@ class CaptureViewController: UIViewController, UINavigationControllerDelegate, U
                                 self.message.text = nil
                             }}
         )
+        self.performSegue(withIdentifier: "toHomeSegue", sender: self)
     }
+
     
     /*
     // MARK: - Navigation
