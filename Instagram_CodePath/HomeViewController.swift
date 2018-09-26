@@ -24,6 +24,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         collectionView.dataSource = self
         collectionView.delegate = self
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        // add refresh control to table view
+        self.collectionView.insertSubview(refreshControl, at: 0)
 //        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         
 //        let cellsPerLine:CGFloat = 1
@@ -31,6 +36,21 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
 //        layout.itemSize = CGSize(width: widthOfEachItem, height: widthOfEachItem * 1.75)
 //        layout.minimumInteritemSpacing = 0
 //        layout.minimumLineSpacing = 0
+    }
+    
+    @objc func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        
+        getData(completion: {(success: Bool, error: Error?) -> Void in
+            
+            if success {
+                print ("successfully received data")
+                
+                // Tell the refreshControl to stop spinning
+                refreshControl.endRefreshing()
+            } else {
+                print (error?.localizedDescription ?? "no error")
+            }
+        })
     }
 
     override func didReceiveMemoryWarning() {

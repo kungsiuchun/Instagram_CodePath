@@ -74,8 +74,8 @@ class ChoosePhotoFromAlbumViewController: UIViewController, UIImagePickerControl
     }
      func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        dismiss(animated: true, completion: { () -> Void in
-            self.dismiss(animated: false, completion: nil)
+        dismiss(animated: false, completion: { () -> Void in
+            self.dismiss(animated: true, completion: nil)
             
             self.tabBarController?.selectedIndex = 0
         })
